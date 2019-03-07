@@ -2,20 +2,24 @@
   <div class="image-marker">
     <img
       :src="src"
-      class="image"
       :style="posStyle"
+      class="image"
       @load="onImageLoad"
     >
     <div
-      class="mark-container"
       :style="posStyle"
+      class="mark-container"
     >
-      <slot></slot>
+      <slot/>
     </div>
   </div>
 </template>
 
 <script>
+import _debounce from 'lodash.debounce'
+
+const LAYOUT_REFRESH_DELAY = 100
+
 export default {
   props: {
     src: { type: String, required: true },
@@ -60,7 +64,8 @@ export default {
       this.refreshPos()
     },
     // recalc left, top, width, height
-    refreshPos () {
+    // Need a delay to wait the dom refreshing
+    refreshPos: _debounce(function () {
       this.containerWidth = this.$el.clientWidth
       this.containerHeight = this.$el.clientHeight
       let clientWidth = this.containerWidth - this.padding * 2
@@ -80,7 +85,7 @@ export default {
         this.width = this.height * imageRatio
         this.left = this.padding + (clientWidth - this.width) / 2
       }
-    },
+    }, LAYOUT_REFRESH_DELAY),
   },
 }
 </script>
@@ -91,11 +96,9 @@ export default {
   min-width: 200px;
   min-height: 200px;
 }
-
 .image {
   position: absolute;
 }
-
 .mark-container {
   position: absolute;
   width: 100%;
