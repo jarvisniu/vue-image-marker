@@ -46,7 +46,7 @@ export default {
 
 <style lang="stylus" scoped>
 .image-marker
-  width 500px
+  width calc(100vw - 20px)
   height calc(100vh - 100px)
   border solid 1px silver
   user-select none
